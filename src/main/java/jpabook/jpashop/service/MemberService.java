@@ -1,6 +1,7 @@
 package jpabook.jpashop.service;
 
 import jpabook.jpashop.Repository.MemberRepository;
+import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -56,5 +57,11 @@ public class MemberService {
     // 단일 회원 조회
     public Member findOne(Long memberId) {
         return memberRepository.findOne(memberId);
+    }
+
+    public void updateMember(Long memberId, String name, String city, String street, String zipcode) {
+        Member member = memberRepository.findOne(memberId);
+        member.setName(name);
+        member.setAddress(new Address(city, street, zipcode));
     }
 }

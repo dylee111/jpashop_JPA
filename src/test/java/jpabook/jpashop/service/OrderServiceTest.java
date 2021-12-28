@@ -93,11 +93,7 @@ public class OrderServiceTest {
     }
 
     private Item createItem() {
-        Item item = new Book();
-        item.setName("JPA 교과서");
-        item.setPrice(10000);
-        int orderCount = 10;
-        item.setStockQuantity(orderCount);
+        Item item = new Book("JPA 교과서", 10000, 10, "KIM", "12334");
         em.persist(item);
         return item;
     }

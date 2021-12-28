@@ -46,7 +46,7 @@ public class OrderItem {
 
     // -- 비즈니스 로직 -- //
     public void cancel() {
-        item.addStock(count); // 재고 수량을 원상복귀
+        getItem().addStock(count); // 재고 수량을 원상복귀
     }
 
     // -- 조회 로직 -- //
