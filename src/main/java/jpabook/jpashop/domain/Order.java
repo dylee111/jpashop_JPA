@@ -28,14 +28,14 @@ public class Order {
     @JoinColumn(name = "member_id")
     private Member member; // 연관 관계 주인
 
-    // cascade(영속성 전이) -> Order를 저장(persist)하면 연관된 orderItems 모두 같이 저장
-    @OneToMany(mappedBy = "order", fetch = LAZY, cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems = new ArrayList<>();
-
     // Order 저장(persist)하면 연관 delivery 모두 저장
     @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
+
+    // cascade(영속성 전이) -> Order를 저장(persist)하면 연관된 orderItems 모두 같이 저장
+    @OneToMany(mappedBy = "order", fetch = LAZY, cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     private LocalDateTime orderDate; // 주문 시간
 

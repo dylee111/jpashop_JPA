@@ -66,8 +66,26 @@ public class OrderService {
         log.info("BEFORE >>>" + order.getStatus());
     }
 
+    // Order 전체 조회 (join fetch 미사용)
+    public List<Order> findAllOrder() {
+        return orderRepository.findAllOrder();
+    }
+
+    // Order 전체 조회 (join fetch 사용)
+    public List<Order> findAllWithMemberAndDelivery() {
+        return orderRepository.findAllWithMemberAndDelivery();
+    }
+    // OverLoad
+    public List<Order> findAllWithMemberAndDelivery(int offset, int limit) {
+        return orderRepository.findAllWithMemberAndDelivery(offset, limit);
+    }
+
     //검색
     public List<Order> findOrders(OrderSearch orderSearch) {
         return orderRepository.findAllByCriteria(orderSearch);
+    }
+
+    public List<Order> findAllWithItem() {
+        return orderRepository.findAllWithItem();
     }
 }

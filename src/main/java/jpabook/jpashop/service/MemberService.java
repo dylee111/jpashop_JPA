@@ -59,6 +59,8 @@ public class MemberService {
         return memberRepository.findOne(memberId);
     }
 
+    // 회원 정보 수정
+    @Transactional
     public void updateMember(Long memberId, String name, String city, String street, String zipcode) {
         Member member = memberRepository.findOne(memberId);
         member.setName(name);
