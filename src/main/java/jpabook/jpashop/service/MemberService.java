@@ -56,13 +56,13 @@ public class MemberService {
 
     // 단일 회원 조회
     public Member findOne(Long memberId) {
-        return memberRepository.findOne(memberId);
+        return memberRepository.findById(memberId).get();
     }
 
     // 회원 정보 수정
     @Transactional
     public void updateMember(Long memberId, String name, String city, String street, String zipcode) {
-        Member member = memberRepository.findOne(memberId);
+        Member member = memberRepository.findById(memberId).get();
         member.setName(name);
         member.setAddress(new Address(city, street, zipcode));
     }

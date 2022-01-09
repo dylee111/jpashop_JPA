@@ -1,6 +1,6 @@
 package jpabook.jpashop.service;
 
-import jpabook.jpashop.Repository.MemberRepository;
+import jpabook.jpashop.Repository.MemberRepositoryOld;
 import jpabook.jpashop.domain.Member;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,7 +21,8 @@ import static org.junit.Assert.fail;
 public class MemberServiceTest {
 
     @Autowired MemberService memberService;
-    @Autowired MemberRepository memberRepository;
+    @Autowired
+    MemberRepositoryOld memberRepository;
     @Autowired EntityManager em;
 
     @Test

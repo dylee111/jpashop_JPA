@@ -1,7 +1,7 @@
 package jpabook.jpashop.service;
 
 import jpabook.jpashop.Repository.ItemRepository;
-import jpabook.jpashop.Repository.MemberRepository;
+import jpabook.jpashop.Repository.MemberRepositoryOld;
 import jpabook.jpashop.Repository.OrderRepository;
 import jpabook.jpashop.Repository.OrderSearch;
 import jpabook.jpashop.domain.*;
@@ -20,7 +20,7 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final MemberRepository memberRepository;
+    private final MemberRepositoryOld memberRepository;
     private final ItemRepository itemRepository;
 
     /*
@@ -87,5 +87,9 @@ public class OrderService {
 
     public List<Order> findAllWithItem() {
         return orderRepository.findAllWithItem();
+    }
+
+    public List<Order> findByQuerydsl(OrderSearch orderSearch) {
+        return orderRepository.findByQuerydsl(orderSearch);
     }
 }

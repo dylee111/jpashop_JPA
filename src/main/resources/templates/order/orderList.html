@@ -59,7 +59,6 @@
 </body>
 <script th:inline="javascript">
     function cancel(id) {
-        alert(id);
         var form = document.createElement("form");
         form.setAttribute("method", "post");
         form.setAttribute("action", "/orders/" + id + "/cancel");

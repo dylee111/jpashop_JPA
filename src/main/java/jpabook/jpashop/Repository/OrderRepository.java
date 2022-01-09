@@ -1,8 +1,11 @@
 package jpabook.jpashop.Repository;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
-import lombok.RequiredArgsConstructor;
+import jpabook.jpashop.domain.OrderStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -12,10 +15,20 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jpabook.jpashop.domain.QMember.member;
+import static jpabook.jpashop.domain.QOrder.order;
+
 @Repository
-@RequiredArgsConstructor
+@Slf4j
+//@RequiredArgsConstructor
 public class OrderRepository {
     private final EntityManager em;
+    private final JPAQueryFactory queryFactory;
+
+    public OrderRepository(EntityManager em) {
+        this.em = em;
+        this.queryFactory = new JPAQueryFactory(em);
+    }
 
     public void save(Order order) {
         em.persist(order);
@@ -23,6 +36,27 @@ public class OrderRepository {
 
     public Order findOne(Long orderId) {
         return em.find(Order.class, orderId);
+    }
+
+    public List<Order> findByQuerydsl(OrderSearch orderSearch) {
+
+        if ((orderSearch.getMemberName() == null && orderSearch.getOrderStatus() == null)
+                || orderStatusEq(orderSearch.getOrderStatus()) == null) {
+            return queryFactory
+                    .selectFrom(order)
+                    .leftJoin(order.member, member).fetchJoin()
+                    .fetch();
+        } else {
+
+            return queryFactory
+                    .selectFrom(order)
+                    .leftJoin(order.member, member).fetchJoin()
+                    .where(
+                            usernameEq(orderSearch.getMemberName()),
+                            orderStatusEq(orderSearch.getOrderStatus())
+                    )
+                    .fetch();
+        }
     }
 
     public List<Order> findAllByCriteria(OrderSearch orderSearch) {
@@ -55,6 +89,7 @@ public class OrderRepository {
 
     // 리포지토리 재사용성이 높다 -> 해당 데이터를 필요로 한 로직 어디서든 사용 가능
     // 엔티티를 조회해서 오기 때문에 데이터 변경이 가능
+
     public List<Order> findAllWithMemberAndDelivery() {
         return em.createQuery("SELECT o FROM Order o " +
                 " JOIN FETCH o.member m " +
@@ -71,7 +106,6 @@ public class OrderRepository {
                 .setMaxResults(limit)
                 .getResultList();
     }
-
     public List<Order> findAllWithItem() {
         return em.createQuery("SELECT DISTINCT o FROM Order o " +
                 " JOIN FETCH o.member m " +
@@ -79,5 +113,13 @@ public class OrderRepository {
                 " JOIN FETCH o.orderItems oi " +
                 " JOIN FETCH oi.item i ", Order.class)
                 .getResultList();
+    }
+
+    private BooleanExpression orderStatusEq(OrderStatus orderStatus) {
+        return StringUtils.hasText(orderStatus.toString()) ? order.status.eq(orderStatus) : null;
+    }
+
+    private BooleanExpression usernameEq(String name) {
+        return StringUtils.hasText(name) ? member.name.eq(name) : null;
     }
 }
